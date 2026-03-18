@@ -1,0 +1,148 @@
+﻿<Window x:Class="ListApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Icon="/ListApp;component/Images/app.ico"
+        Title="ListRandom application" Height="500" Width="750"
+        MinWidth="680" MinHeight="440">
+    
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid.Resources>
+            <Style x:Key="BtnBase" TargetType="Button">
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="Padding" Value="12,8"/>
+                <Setter Property="MinWidth" Value="120"/>
+                <Setter Property="FontWeight" Value="SemiBold"/>
+                <Setter Property="BorderBrush" Value="Transparent"/>
+                <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="border"
+                                    Background="{TemplateBinding Background}"
+                                    CornerRadius="4"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}">
+                                <ContentPresenter HorizontalAlignment="Center"
+                                                  VerticalAlignment="Center"
+                                                  Margin="{TemplateBinding Padding}"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="border" Property="Opacity" Value="0.95"/>
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter TargetName="border" Property="Opacity" Value="0.85"/>
+                                </Trigger>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter TargetName="border" Property="Opacity" Value="0.6"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="BtnBlack" TargetType="Button" BasedOn="{StaticResource BtnBase}">
+                <Setter Property="Background" Value="#1F1F1F"/>
+            </Style>
+
+            <Style x:Key="BtnGreen" TargetType="Button" BasedOn="{StaticResource BtnBase}">
+                <Setter Property="Background" Value="#27AE60"/>
+            </Style>
+
+            <Style x:Key="BtnBlue" TargetType="Button" BasedOn="{StaticResource BtnBase}">
+                <Setter Property="Background" Value="#2F80ED"/>
+            </Style>
+        </Grid.Resources>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="31*"/>
+            <ColumnDefinition Width="699*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.Row="0" Grid.ColumnSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Orientation="Vertical" VerticalAlignment="Top">
+                <TextBlock Text="ListRandom: Serialize &amp; Restore" FontSize="24" FontWeight="Bold"/>
+                <TextBlock Text="Enter the elements separated by a comma"
+                           FontStyle="Italic" Foreground="Gray" Margin="0,4,0,0"/>
+            </StackPanel>
+
+            <Image Grid.Column="1"
+                   Source="/SiberInteractive;component/Images/logo.png"
+                   Width="131" Height="92"
+                   HorizontalAlignment="Right" Margin="10,0,10,0"/>
+        </Grid>
+
+        <Grid Grid.Row="1" Margin="0,10,0,10" Grid.ColumnSpan="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Text="Elements:" Margin="0,0,0,6" FontWeight="Bold"/>
+
+            <TextBox Grid.Row="1" Name="TxtData"
+                     AcceptsReturn="True"
+                     TextWrapping="Wrap"
+                     VerticalScrollBarVisibility="Auto"
+                     HorizontalAlignment="Stretch"
+                     MinHeight="80"
+                     FontSize="14"/>
+        </Grid>
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal"
+                    HorizontalAlignment="Left" Margin="144,0,0,10" Grid.Column="1">
+            <Button Name="BtnGenerate" Content="Generate"
+                    Style="{StaticResource BtnBlack}"
+                    Click="BtnGenerate_Click"/>
+            <Button Name="BtnSerialize" Content="Save" Margin="10,0,0,0"
+                    Style="{StaticResource BtnGreen}"
+                    Click="BtnSerialize_Click"/>
+            <Button Name="BtnDeserialize" Content="Load" Margin="10,0,0,0"
+                    Style="{StaticResource BtnBlue}"
+                    Click="BtnDeserialize_Click"/>
+        </StackPanel>
+
+        <Grid Grid.Row="3" Grid.ColumnSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <GroupBox Header="Current list" Grid.Column="0" Margin="0,0,5,0" FontWeight="Bold">
+                <DataGrid Name="GridOriginal" AutoGenerateColumns="False" IsReadOnly="True"
+                          HeadersVisibility="Column" CanUserAddRows="False" CanUserDeleteRows="False"
+                          EnableRowVirtualization="True">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Index"     Binding="{Binding Index}" />
+                        <DataGridTextColumn Header="Data"      Binding="{Binding Data}" />
+                        <DataGridTextColumn Header="RandomIdx" Binding="{Binding RandomIndex}" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </GroupBox>
+
+            <GroupBox Header="Loaded list" Grid.Column="1" Margin="5,0,0,0" FontWeight="Bold">
+                <DataGrid Name="GridRestored" AutoGenerateColumns="False" IsReadOnly="True"
+                          HeadersVisibility="Column" CanUserAddRows="False" CanUserDeleteRows="False"
+                          EnableRowVirtualization="True">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Index"     Binding="{Binding Index}" />
+                        <DataGridTextColumn Header="Data"      Binding="{Binding Data}" />
+                        <DataGridTextColumn Header="RandomIdx" Binding="{Binding RandomIndex}" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </GroupBox>
+        </Grid>
+    </Grid>
+</Window>
